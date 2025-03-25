@@ -1,43 +1,43 @@
-import pygame, constants, math
-import keyboard, mouse
-from pygame import gfxdraw
-
-from img import images
-
-
-import os
-from win32api import GetSystemMetrics
-
-windowX = GetSystemMetrics(0)/2 - constants.gameW/2
-windowY = GetSystemMetrics(1)/2 - constants.gameH/2
-os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (windowX, windowY)
+import pygame
+import constants
+from objects.rect import Rect
+from objects.flipper import Flipper
+from objects.polygon import Polygon
+import math
 
 pygame.init()
-from pygame.locals import NOFRAME, DOUBLEBUF
-ctx = pygame.display.set_mode((constants.gameW,constants.gameH), DOUBLEBUF)
-
-
-ctx.set_alpha(None)
+screen = pygame.display.set_mode((constants.gameW, constants.gameH))
 pygame.display.set_caption("Pinball")
+
 clock = pygame.time.Clock()
 
+# ui elements
+playButton = Rect(constants.gameW / 2 - 105, constants.gameH - 200, 210, 63, (0, 255, 0))  
+plunger = Rect(constants.gameW - 30, constants.gameH - 60, 20, 60, (0, 0, 255))           
 
-def listen(running):
+# flippers
+leftX = -15 + constants.gameW / 2 - 45
+rightX = 15 + constants.gameW / 2 + 45 + 2 * 35
+flippers = [
+    Flipper(leftX, 550, 90, 20, 5 * math.pi / 36, -5 * math.pi / 36, (200, 0, 0), "L"),
+    Flipper(rightX, 550, 90, 20, 31 * math.pi / 36, 41 * math.pi / 36, (200, 0, 0), "R")
+]
+
+# game loop
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            print(f"KEYDOWN: {event.key}")
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            print(f"MOUSE CLICK: {event.button}")
-        keyboard.listen(event)  # Your custom logic
-        mouse.listen()          # Your custom logic
-    return running
 
-running = True
-while running:
-    running = listen(running)
-    ctx.fill((50, 50, 50))
+    screen.fill((0, 0, 0))
+
+    playButton.draw(screen)
+    plunger.draw(screen)
+
+    for flipper in flippers:
+        flipper.draw(screen)
+
     pygame.display.flip()
     clock.tick(60)
 
