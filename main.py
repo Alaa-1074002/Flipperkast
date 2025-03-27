@@ -50,7 +50,7 @@ flippers = [
 ]
 
 # Ball
-ball = Ball(380, constants.gameH - 50, 10, (255, 255, 0))
+ball = Ball(plunger.x + plunger.w // 2, constants.gameH - 30, 10, (255, 255, 0))
 sounds["spawn"].play()
 
 # Bumpers
@@ -67,8 +67,16 @@ font = pygame.font.SysFont(None, 36)
 walls = [
     Rect(0, 0, constants.gameW, 10, (255, 255, 255)),              
     Rect(0, 0, 20, constants.gameH, (255, 255, 255)),              
-    Rect(constants.gameW - 20, 0, 20, constants.gameH, (255, 255, 255))  
+    Rect(constants.gameW - 20, 0, 20, constants.gameH - 100, (255, 255, 255))
+  
 ]
+
+guiding_wall = Polygon([
+    (constants.gameW - 20, constants.gameH - 100),
+    (constants.gameW - 60, constants.gameH - 60),
+    (constants.gameW - 20, constants.gameH - 60)
+], 0, (100, 100, 100))
+
 
 plunger_force = 0
 plunger_charging = False
@@ -107,6 +115,9 @@ while running:
 
     if ball_launched:
         ball.go(screen)
+    if ball_launched and ball.x > constants.gameW - 50 and ball.y > constants.gameH - 120:
+        ball.spd[0] = -2 
+
     else:
         ball.draw(screen)
 
@@ -132,6 +143,8 @@ while running:
     for wall in walls:
         wall.draw(screen)
 
+    guiding_wall.draw(screen)
+    
     score_surf = font.render(f"Score: {score}", True, (255, 255, 255))
     screen.blit(score_surf, (20, 20))
 
@@ -145,3 +158,4 @@ while running:
         
     pygame.display.flip()
     clock.tick(60)
+
