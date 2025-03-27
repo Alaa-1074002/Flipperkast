@@ -17,6 +17,7 @@ pygame.mixer.init()
 pygame.mixer.music.load("assets/main_theme.ogg")
 pygame.mixer.music.play(-1) 
 
+
 # Sound effects
 sounds = {
     "flipper": pygame.mixer.Sound("assets/flipper.wav"),
@@ -49,7 +50,7 @@ flippers = [
 ]
 
 # Ball
-ball = Ball(380, 100, 10, (255, 255, 0))
+ball = Ball(380, constants.gameH - 50, 10, (255, 255, 0))
 sounds["spawn"].play()
 
 # Bumpers
@@ -72,7 +73,7 @@ walls = [
 plunger_force = 0
 plunger_charging = False
 ball_launched = False
-
+ball_lost = False
 # Game loop
 running = True
 while running:
@@ -109,6 +110,19 @@ while running:
     else:
         ball.draw(screen)
 
+    if ball_launched and ball.y - ball.r > constants.gameH:
+        ball_lost = True
+        ball_launched = False
+        sounds["destroyed"].play()
+    
+    if ball_lost:
+        ball.x = plunger.x + plunger.w // 2
+        ball.y = plunger.y - 10
+        ball.spd = [0, 0]
+        ball_lost = False
+        sounds["spawn"].play()
+    
+    
     for bumper in bumpers:
         bumper.draw(screen)
         if bumper.checkCollision(ball):
@@ -121,6 +135,10 @@ while running:
     score_surf = font.render(f"Score: {score}", True, (255, 255, 255))
     screen.blit(score_surf, (20, 20))
 
+    if not ball_launched:
+        msg = font.render("Press SPACE to launch!", True, (255, 255, 0))
+        screen.blit(msg, (constants.gameW // 2 - 150, 40))
+    
     if plunger_charging and plunger_force < 15:
         plunger_force += 0.2
         pygame.draw.rect(screen, (0, 255, 0), (plunger.x, plunger.y - plunger_force * 10, plunger.w, plunger_force * 10))
