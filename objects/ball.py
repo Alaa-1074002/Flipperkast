@@ -28,3 +28,28 @@ class Ball(Circle):
         self.accelerate()
         self.move()
         self.draw(ctx)
+    
+    
+    def move(self):
+        self.x += self.spd[0]
+        self.y += self.spd[1]
+
+        # Bounce off floor
+        if self.y + self.r > constants.gameH:
+            self.y = constants.gameH - self.r
+            self.spd[1] = -self.spd[1] * self.bounciness
+
+        # Bounce off ceiling
+        if self.y - self.r < 0:
+            self.y = self.r
+            self.spd[1] = -self.spd[1] * self.bounciness
+
+        # Bounce off left wall
+        if self.x - self.r < 0:
+            self.x = self.r
+            self.spd[0] = -self.spd[0] * self.bounciness
+
+        # Bounce off right wall
+        if self.x + self.r > constants.gameW:
+            self.x = constants.gameW - self.r
+            self.spd[0] = -self.spd[0] * self.bounciness

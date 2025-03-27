@@ -24,7 +24,16 @@ flippers = [
     Flipper(leftX, 550, 90, 20, 5 * math.pi / 36, -5 * math.pi / 36, (200, 0, 0), "L"),
     Flipper(rightX, 550, 90, 20, 31 * math.pi / 36, 41 * math.pi / 36, (200, 0, 0), "R")
 ]
+
+#ball
 ball = Ball(380, 100, 10, (255, 255, 0))
+
+#walls
+walls = [
+    Rect(0, 0, constants.gameW, 10, (255, 255, 255)),              # Top wall
+    Rect(0, 0, 20, constants.gameH, (255, 255, 255)),              # Left wall
+    Rect(constants.gameW - 20, 0, 20, constants.gameH, (255, 255, 255))  # Right wall
+]
 # game loop
 running = True
 while running:
@@ -39,8 +48,11 @@ while running:
 
     for flipper in flippers:
         flipper.draw(screen)
+    
+    for wall in walls:
+        wall.draw(screen)
 
-    ball.go(screen)  # <<< Add this line for Commit 5
+    ball.go(screen)  
 
     pygame.display.flip()
     clock.tick(60)
