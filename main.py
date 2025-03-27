@@ -3,6 +3,8 @@ import constants
 from objects.rect import Rect
 from objects.flipper import Flipper
 from objects.polygon import Polygon
+from objects.ball import Ball
+
 import math
 
 pygame.init()
@@ -22,7 +24,7 @@ flippers = [
     Flipper(leftX, 550, 90, 20, 5 * math.pi / 36, -5 * math.pi / 36, (200, 0, 0), "L"),
     Flipper(rightX, 550, 90, 20, 31 * math.pi / 36, 41 * math.pi / 36, (200, 0, 0), "R")
 ]
-
+ball = Ball(380, 100, 10, (255, 255, 0))
 # game loop
 running = True
 while running:
@@ -38,7 +40,7 @@ while running:
     for flipper in flippers:
         flipper.draw(screen)
 
+    ball.go(screen)  # <<< Add this line for Commit 5
+
     pygame.display.flip()
     clock.tick(60)
-
-pygame.quit()
