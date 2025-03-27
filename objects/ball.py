@@ -12,14 +12,14 @@ class Ball(Circle):
     def accelerate(self):
         self.spd[1] += constants.TABLE_ACCELERATION
 
-    def move(self):
-        self.x += self.spd[0]
-        self.y += self.spd[1]
+    # def move(self):
+    #     self.x += self.spd[0]
+    #     self.y += self.spd[1]
 
-        # Simple floor bounce
-        if self.y + self.r > constants.gameH:
-            self.y = constants.gameH - self.r
-            self.spd[1] = -self.spd[1] * self.bounciness
+    #     # Simple floor bounce
+    #     if self.y + self.r > constants.gameH:
+    #         self.y = constants.gameH - self.r
+    #         self.spd[1] = -self.spd[1] * self.bounciness
 
     def draw(self, ctx):
         pygame.draw.circle(ctx, self.color, (int(self.x), int(self.y)), self.r)
