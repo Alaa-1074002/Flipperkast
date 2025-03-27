@@ -69,15 +69,30 @@ walls = [
     Rect(constants.gameW - 20, 0, 20, constants.gameH, (255, 255, 255))  
 ]
 
+plunger_force = 0
+plunger_charging = False
+ball_launched = False
+
 # Game loop
 running = True
 while running:
     for event in pygame.event.get():
+        keyboard.listen(event)
+        mouse.listen()
+
         if event.type == pygame.QUIT:
             running = False
-        else:
-            keyboard.listen(event)
-            mouse.listen()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and not ball_launched:
+                plunger_charging = True
+                sounds["spring"].play()
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE and plunger_charging:
+                plunger_charging = False
+                ball_launched = True
+                ball.spd[1] = -plunger_force
+                plunger_force = 0
+                sounds["plunger"].play()
 
     screen.fill((0, 0, 0))
 
@@ -89,7 +104,10 @@ while running:
             sounds["flipper"].play()
         flipper.draw(screen)
 
-    ball.go(screen)
+    if ball_launched:
+        ball.go(screen)
+    else:
+        ball.draw(screen)
 
     for bumper in bumpers:
         bumper.draw(screen)
@@ -103,5 +121,9 @@ while running:
     score_surf = font.render(f"Score: {score}", True, (255, 255, 255))
     screen.blit(score_surf, (20, 20))
 
+    if plunger_charging and plunger_force < 15:
+        plunger_force += 0.2
+        pygame.draw.rect(screen, (0, 255, 0), (plunger.x, plunger.y - plunger_force * 10, plunger.w, plunger_force * 10))
+        
     pygame.display.flip()
     clock.tick(60)
