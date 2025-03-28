@@ -157,16 +157,18 @@ while running:
     if ball_launched and ball.y - ball.r > constants.gameH:
         ball_lost = True
         ball_launched = False
+        lives -= 1
         sounds["destroyed"].play()
     
     if ball_lost:
-        ball.x = plunger.x + plunger.w // 2
-        ball.y = plunger.y - 10
-        ball.spd = [0, 0]
-        ball_lost = False
-        lives = 3
-        game_over = False
-        sounds["spawn"].play()
+        if lives <= 0:
+            game_over = True
+        else:
+            ball.x = plunger.x + plunger.w // 2
+            ball.y = plunger.y - 10
+            ball.spd = [0, 0]
+            ball_lost = False
+            sounds["spawn"].play()
     
     
     for bumper in bumpers:
@@ -197,6 +199,13 @@ while running:
     score_surf = font.render(f"Score: {score}", True, (255, 255, 255))
     screen.blit(score_surf, (20, 20))
 
+    lives_surf = font.render(f"Lives: {lives}", True, (255, 255, 255))
+    screen.blit(lives_surf, (20, 60))
+    
+    if game_over:
+        over_surf = font.render("Game Over! Press R to Restart", True, (255, 0, 0))
+        screen.blit(over_surf, (constants.gameW // 2 - 150, constants.gameH // 2))
+    
     if not ball_launched:
         msg = font.render("Press SPACE to launch!", True, (255, 255, 0))
         screen.blit(msg, (constants.gameW // 2 - 150, 40))
