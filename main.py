@@ -101,6 +101,36 @@ ball_launched = False
 ball_lost = False
 lives = 3
 game_over = False
+
+def main_menu():
+    font_big = pygame.font.SysFont(None, 72)
+    font_small = pygame.font.SysFont(None, 36)
+
+    title = font_big.render("Flipperkast", True, (255, 255, 0))
+    subtitle = font_small.render("Press SPACE to Start", True, (255, 255, 255))
+
+    while True:
+        screen.fill((0, 0, 50))
+        screen.blit(title, (constants.gameW // 2 - title.get_width() // 2, 200))
+        screen.blit(subtitle, (constants.gameW // 2 - subtitle.get_width() // 2, 300))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    exit()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+
+main_menu()
+
 # Game loop
 running = True
 while running:
@@ -144,7 +174,6 @@ while running:
         if flipper.isActive():
             sounds["flipper"].play()
         flipper.draw(screen)
-        flipper.draw(screen)
 
     if ball_launched:
         ball.go(screen, flippers, [], walls, bumpers, bricks) 
@@ -181,16 +210,12 @@ while running:
         if brick.checkCollision(ball):
             score += 20
             sounds["target_base"].play()
-            sounds["target_base"].play()
-            sounds["target_base"].play()
     for wall in walls:
 
         for brick in bricks:
             brick.draw(screen)
             if brick.checkCollision(ball):
                 score += 20
-                sounds["target_base"].play()
-                sounds["target_base"].play()
                 sounds["target_base"].play()
                 wall.draw(screen)
 
@@ -216,10 +241,3 @@ while running:
         
     pygame.display.flip()
     clock.tick(60)
-
-
-
-
-
-
-
