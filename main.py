@@ -7,9 +7,6 @@ from objects.ball import Ball
 from objects.bumper import Bumper
 import keyboard
 import mouse
-from logic.ballLogic import update_ball
-from logic.gameLogic import update_game_state
-from logic.ballLogic import update_ball
 import pygame.mixer
 import math
 
@@ -85,6 +82,8 @@ plunger_force = 0
 plunger_charging = False
 ball_launched = False
 ball_lost = False
+lives = 3
+game_over = False
 # Game loop
 running = True
 while running:
@@ -98,6 +97,19 @@ while running:
             if event.key == pygame.K_SPACE and not ball_launched:
                 plunger_charging = True
                 sounds["spring"].play()
+            elif event.key == pygame.K_r and game_over:
+                # Reset all game state
+                ball.x = plunger.x + plunger.w // 2
+                ball.y = plunger.y - 10
+                ball.spd = [0, 0]
+                ball_launched = False
+                ball_lost = False
+                lives = 3
+                score = 0
+                game_over = False
+                plunger_force = 0
+                plunger_charging = False
+                sounds["spawn"].play()
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE and plunger_charging:
                 plunger_charging = False
@@ -134,6 +146,8 @@ while running:
         ball.y = plunger.y - 10
         ball.spd = [0, 0]
         ball_lost = False
+        lives = 3
+        game_over = False
         sounds["spawn"].play()
     
     
@@ -161,5 +175,7 @@ while running:
         
     pygame.display.flip()
     clock.tick(60)
+
+
 
 
