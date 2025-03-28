@@ -7,6 +7,7 @@ from objects.ball import Ball
 from objects.bumper import Bumper
 import keyboard
 import mouse
+from logic.ballLogic import update_ball
 import pygame.mixer
 import math
 
@@ -68,7 +69,7 @@ walls = [
     Rect(0, 0, constants.gameW, 10, (255, 255, 255)),              
     Rect(0, 0, 20, constants.gameH, (255, 255, 255)),              
     Rect(constants.gameW - 20, 0, 20, constants.gameH - 100, (255, 255, 255))
-  
+
 ]
 
 guiding_wall = Polygon([
@@ -158,4 +159,5 @@ while running:
         
     pygame.display.flip()
     clock.tick(60)
+
 
