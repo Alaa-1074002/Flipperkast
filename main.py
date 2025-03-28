@@ -8,6 +8,8 @@ from objects.bumper import Bumper
 import keyboard
 import mouse
 from logic.ballLogic import update_ball
+from logic.gameLogic import update_game_state
+from logic.ballLogic import update_ball
 import pygame.mixer
 import math
 

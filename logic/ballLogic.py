@@ -1,5 +1,5 @@
-def update_ball(ball, launched):
+def update_ball(ball, launched, screen):
     if launched:
         ball.accelerate()
         ball.move()
-    ball.draw()
+    ball.draw(screen)
