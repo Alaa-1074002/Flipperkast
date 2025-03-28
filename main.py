@@ -9,6 +9,7 @@ import keyboard
 import mouse
 import pygame.mixer
 import math
+from objects.brick import Brick
 
 pygame.init()
 pygame.mixer.init()
@@ -61,6 +62,22 @@ bumpers = [
 ]
 
 score = 0
+
+# Bricks
+bricks = []
+brick_width = 60
+brick_height = 20
+cols = 5
+rows = 3
+x_start = 100
+y_start = 100
+gap = 10
+
+for row in range(rows):
+    for col in range(cols):
+        x = x_start + col * (brick_width + gap)
+        y = y_start + row * (brick_height + gap)
+        bricks.append(Brick(x, y, brick_width, brick_height, 0, 0))
 font = pygame.font.SysFont(None, 36)
 
 # Walls
@@ -153,12 +170,26 @@ while running:
     
     for bumper in bumpers:
         bumper.draw(screen)
-        if bumper.checkCollision(ball):
-            score += 10
-            sounds["bumper"].play()
+        sounds["bumper"].play()
 
+
+    for brick in bricks:
+        brick.draw(screen)
+        if brick.checkCollision(ball):
+            score += 20
+            sounds["target_base"].play()
+            sounds["target_base"].play()
+            sounds["target_base"].play()
     for wall in walls:
-        wall.draw(screen)
+
+        for brick in bricks:
+            brick.draw(screen)
+            if brick.checkCollision(ball):
+                score += 20
+                sounds["target_base"].play()
+                sounds["target_base"].play()
+                sounds["target_base"].play()
+                wall.draw(screen)
 
     guiding_wall.draw(screen)
     
@@ -175,6 +206,8 @@ while running:
         
     pygame.display.flip()
     clock.tick(60)
+
+
 
 
 
