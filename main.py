@@ -144,9 +144,10 @@ while running:
         if flipper.isActive():
             sounds["flipper"].play()
         flipper.draw(screen)
+        flipper.draw(screen)
 
     if ball_launched:
-        ball.go(screen)
+        ball.go(screen, flippers, [], walls, bumpers, bricks) 
     if ball_launched and ball.x > constants.gameW - 50 and ball.y > constants.gameH - 120:
         ball.spd[0] = -2 
 
@@ -206,6 +207,7 @@ while running:
         
     pygame.display.flip()
     clock.tick(60)
+
 
 
 

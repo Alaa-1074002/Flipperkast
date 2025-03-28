@@ -5,8 +5,6 @@ def sortByY(a):
     return a[1]
 
 
-
-
 import pygame as pg
 
 from pygame import gfxdraw

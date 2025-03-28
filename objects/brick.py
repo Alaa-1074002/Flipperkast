@@ -1,24 +1,15 @@
-from objects.polygon import Polygon
+import pygame, constants
+from pygame import gfxdraw
+from img import images
+from logic import collisions
+from objects.rect import Rect
 
-class Brick(Polygon):
-    def __init__(self, x, y, w, h, min_angle, max_angle):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        points = [
-            (x, y),
-            (x + w, y),
-            (x + w, y + h),
-            (x, y + h)
-        ]
-        color = (150, 75, 0)  # Brown
-        super().__init__(points, 0, color)
-        self.min = min_angle
-        self.max = max_angle
-
-    def checkCollision(self, ball):
-        return (
-            self.x <= ball.x <= self.x + self.w and
-            self.y <= ball.y <= self.y + self.h
-        )
+class Brick(Rect):
+    def __init__(self,x,y,w,h,min,max,points=20,img=images.brick,name="brick"):
+        super().__init__(x,y,w,h,None,img,[0,0],name)
+        self.xRange = [min,max]
+        self.points = points
+        
+        
+    def checkCollision(self, other):
+        return collisions.circleRect(other, self)

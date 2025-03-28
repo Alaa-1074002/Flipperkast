@@ -1,8 +1,8 @@
 import math, copy
 from logic.graphics import sortByX, sortByY
-from objects.rect import Rect
 
 def linePoint(x1, y1, x2, y2, px, py):
+    from objects.rect import Rect  
     # get distance from the point to the two ends of the line
     d1 = math.hypot(px-x1,py-y1)
     d2 = math.hypot(px-x2,py-y2)
@@ -13,13 +13,14 @@ def linePoint(x1, y1, x2, y2, px, py):
     # add buffer zone that will give collision
     epsilon = 0.1; 
 
-    
+
     if (d1+d2 >= lineLen-epsilon and d1+d2 <= lineLen+epsilon):
         return True
     else:
         return False
 
 def rectPoint(rect,point):
+    from objects.rect import Rect  # Moved import inside function to fix circular import
     if rect.x < point[0]:
         if rect.x + rect.w > point[0]:
             if rect.y < point[1]:
@@ -28,6 +29,7 @@ def rectPoint(rect,point):
     return False
 
 def rectangles(a,b): 
+    from objects.rect import Rect  # Moved import inside function to fix circular import
     if a.x < b.x + b.w:
         if a.x + a.w > b.x:
             if a.y < b.y + b.h:
@@ -39,6 +41,7 @@ def rectangles(a,b):
     return 0
 
 def circPoint(circ,point):
+    from objects.rect import Rect  # Moved import inside function to fix circular import
     dx = point[0] - circ.x
     dy = point[1] - circ.y
     dd = math.hypot(dx, dy)
@@ -49,6 +52,7 @@ def circPoint(circ,point):
         return False
 
 def circles(a,b):
+    from objects.rect import Rect  # Moved import inside function to fix circular import
     # if distance between their centers is less than the sum of their radii
     dx = abs(a.x - b.x)
     dy = abs(a.y - b.y)
@@ -58,6 +62,7 @@ def circles(a,b):
     return False
 
 def circPie(circ, pie, pieLowTheta, pieHighTheta):
+    from objects.rect import Rect  # Moved import inside function to fix circular import
 
     if not circles(circ,pie):
         return False
@@ -72,6 +77,7 @@ def circPie(circ, pie, pieLowTheta, pieHighTheta):
                 return False
 
 def circleRect(circ,rect):
+    from objects.rect import Rect  # Moved import inside function to fix circular import
     # get x and y distance from their centers
     dx = abs(circ.x - rect.x - rect.w / 2)
     dy = abs(circ.y - rect.y - rect.h / 2)
@@ -81,21 +87,21 @@ def circleRect(circ,rect):
     # test collision, return false if not colliding
     if dx > dxMin: return False
     elif dy > dyMin: return False
-    
 
     # find bounce direction, return associated number
-    if dy / rect.h < dx / rect.w: 
-        if dx + abs(circ.spd[0]) <= dxMin: 
-            return 3 
+    if dy / rect.h < dx / rect.w: # ratios dissociate from unequal sides of rectangles
+        if dx + abs(circ.spd[0]) <= dxMin: # if this function would return true next tick
+            return 3 # flip both directions
         else:
-            return 1 
-    else: 
+            return 1 # flip x direction
+    else: # dx / rect.w < dy / rect.h:
         if dy + abs(circ.spd[1]) <= dyMin:
-            return 3 
+            return 3 # flip both directions
         else:
-            return 2 
+            return 2 # flip y direction
 
 def circleTiltedRect(circ, rectPoints, rectW, rectH, rectAngle):
+    from objects.rect import Rect  # Moved import inside function to fix circular import
 
     rectAngle = math.tau - rectAngle
 
@@ -138,7 +144,7 @@ def circleTiltedRect(circ, rectPoints, rectW, rectH, rectAngle):
         return True
 
         # find bounce direction, return associated number
-        if dy / rect.h < dx / rect.w: # ratios dissociate from unequal sides of rectangles
+        if dy / rect.h < dx / rect.w: 
             if dx + abs(circ.spd[0]) <= dxMin: # if this function would return true next tick
                 return 3 # flip both directions
             else:
@@ -154,8 +160,7 @@ def circleTiltedRect(circ, rectPoints, rectW, rectH, rectAngle):
         return False
 
 def lineCircle(x1, y1, x2, y2, circ):
-    
-    # if so, return true immediately
+    from objects.rect import Rect  # Moved import inside function to fix circular import
     inside1 = circPoint(circ, [x1,y1])
     inside2 = circPoint(circ, [x2,y2])
     if inside1 or inside2:
@@ -173,7 +178,6 @@ def lineCircle(x1, y1, x2, y2, circ):
     closestX = x1 + (dot * (x2-x1))
     closestY = y1 + (dot * (y2-y1))
 
-    
     # if so keep going, but if not, return false
     if not linePoint(x1,y1,x2,y2, closestX,closestY):
         return False
