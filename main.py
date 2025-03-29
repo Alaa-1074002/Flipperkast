@@ -10,6 +10,7 @@ import mouse
 import pygame.mixer
 import math
 from objects.brick import Brick
+import os
 
 pygame.init()
 pygame.mixer.init()
@@ -62,6 +63,16 @@ bumpers = [
 ]
 
 score = 0
+highscore_file = "highscore.txt"
+highscore = 0
+
+if os.path.exists(highscore_file):
+    with open(highscore_file, "r") as f:
+        try:
+            highscore = int(f.read())
+        except:
+            highscore = 0
+
 
 # Bricks
 bricks = []
@@ -153,6 +164,13 @@ while running:
                 ball_lost = False
                 lives = 3
                 score = 0
+        if os.path.exists(highscore_file):
+            with open(highscore_file, "r") as f:
+                try:
+                    highscore = int(f.read())
+                except:
+                    highscore = 0
+
                 game_over = False
                 plunger_force = 0
                 plunger_charging = False
@@ -223,11 +241,18 @@ while running:
     
     score_surf = font.render(f"Score: {score}", True, (255, 255, 255))
     screen.blit(score_surf, (20, 20))
+    high_surf = font.render(f"High Score: {highscore}", True, (255, 255, 0))
+    screen.blit(high_surf, (constants.gameW - 250, 20))
 
     lives_surf = font.render(f"Lives: {lives}", True, (255, 255, 255))
     screen.blit(lives_surf, (20, 60))
     
     if game_over:
+        if score > highscore:
+            highscore = score
+            with open(highscore_file, "w") as f:
+                f.write(str(highscore))
+
         over_surf = font.render("Game Over! Press R to Restart", True, (255, 0, 0))
         screen.blit(over_surf, (constants.gameW // 2 - 150, constants.gameH // 2))
     
